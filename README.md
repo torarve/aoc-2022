@@ -2,6 +2,12 @@
 [Advent of Code 2022](https://adventofcode.com/2022)
 
 ## Day 1
+[Day 1](https://adventofcode.com/2022/day/1) is a simple starter problem.
+The main challenge is parsing a file containing a groups of numbers, separated
+by a blank line. Once that is done, it is just finding the largest number (part 1)
+and the sum of the three largest numbers (part 2.)
+
+[Solution day 1](day01.py)
 
 ## Day 2
 
