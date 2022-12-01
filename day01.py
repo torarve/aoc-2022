@@ -1,35 +1,18 @@
-def read_files() -> list[str]:
-    with open("input01.txt") as f:
+from typing import Generator
+
+def read_file(filename: str) -> list[str]:
+    with open(filename) as f:
         return [x.strip() for x in f.readlines()]
 
-test_input = """1000
-2000
-3000
+def count_calories(lines: list[str]) -> Generator[int, None, None]:
+    sum = 0
+    for line in lines:
+        if line == "":
+            yield sum
+            sum = 0
+        else:
+            sum += int(line)
 
-4000
-
-5000
-6000
-
-7000
-8000
-9000
-
-10000"""
-
-lines = test_input.split("\n")
-
-lines = read_files()
-
-sum = 0
-sums = []
-for line in lines:
-    if line == "":
-        sums.append(sum)
-        sum = 0
-    else:
-        sum += int(line)
-
+sums = sorted(count_calories(read_file("input01.txt")))
 print(f"Answer part 1: {max(sums)}")
-sums.sort()
-print(f"Answer part 2: {sums[-3]+sums[-2]+sums[-1]}")
+print(f"Answer part 2: {sum(sums[-3:])}")
