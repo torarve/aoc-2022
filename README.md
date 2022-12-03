@@ -19,6 +19,12 @@ second part.
 [Solution day 2](day02.py)
 
 ## Day 3
+[Day 3](https://adventofcode.com/2022/day/3) requires you to find the common
+element in sets. This is a common problem and most programming languages 
+have some support for it. The main differences between the two parts are
+(1) how to find the sets and (2) the number of sets.
+
+[Solution day 3](day03.py)
 
 ## Day 4
 
