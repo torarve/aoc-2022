@@ -26,14 +26,10 @@ def choose_play(a, b):
     if a == "C" and b == "Y": return "Z"
     if a == "C" and b == "Z": return "X"
 
-
-sample_input = """A Y
-B X
-C Z"""
-lines = sample_input.split("\n")
-
 lines = read_lines("input02.txt")
-
 hands = [tuple(line.split(" ")) for line in lines]
-print(sum([calculate_score(a, b) for (a,b) in hands]))
-print(sum([calculate_score(a, choose_play(a, b)) for (a, b) in hands]))
+
+part1 = sum([calculate_score(a, b) for (a,b) in hands])
+print(f"Answer part 1: {part1}")
+part2 = sum([calculate_score(a, choose_play(a, b)) for (a, b) in hands])
+print(f"Answer part 2: {part2}")

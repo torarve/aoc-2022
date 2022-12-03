@@ -10,6 +10,13 @@ and the sum of the three largest numbers (part 2.)
 [Solution day 1](day01.py)
 
 ## Day 2
+[Day 2](https://adventofcode.com/2022/day/2) is yet a simple problem, but it 
+requires translating letters to rock, paper, or scissors. And to make it a 
+bit more challenging, the meaning changes in part. I decided not to decode
+the letters in code, and just added a function that translated for the 
+second part.
+
+[Solution day 2](day02.py)
 
 ## Day 3
 
