@@ -1,52 +1,43 @@
-from typing import Generator
+from itertools import accumulate
+from typing import Callable, Generator, Iterable
 from common import read_lines
 
+class Range:
+    @staticmethod
+    def parse(rangeStr: str) -> "Range":
+        a, b = tuple(rangeStr.split("-"))
+        return Range(int(a), int(b))
 
-def get_ranges(line: str) -> Generator[tuple[int, int], None, None]:
-    for part in line.split(","):
-        x, y = tuple(part.split("-"))
-        yield (int(x), int(y))
+    @staticmethod
+    def parse_line(line: str) -> Generator["Range", None, None]:
+        for part in line.split(","):
+            yield Range.parse(part)
+
+    def __init__(self, start: int, end: int):
+        self.start = start
+        self.end = end
+
+    def contains(self, other: "Range") -> bool:
+        return self.start <= other.start and self.end >= other.end
+
+    def overlaps(self, other: "Range") -> bool:
+        return not (other.end<self.start or other.start>self.end)
 
 
+def count_matches(ranges: Iterable[Range], f: Callable[[Range, Range], bool]) -> int:
+    result = 0
+    prev: list[Range] = []
+    for range in ranges:
+        result += sum([1 for x in prev if f(range, x) or f(x, range)])
+        prev.append(range)
+    return result
 
-lines = """2-4,6-8
-2-3,4-5
-5-7,7-9
-2-8,3-7
-6-6,4-6
-2-6,4-8""".split("\n")
 
 lines = read_lines("input04.txt")
+range_sets = [list(Range.parse_line(line)) for line in lines]
 
-def contains(first: tuple[int, int], second: tuple[int, int]):
-    fx, fy = first
-    sx, sy = second
-    return fx <= sx and fy >= sy
+answer = sum([count_matches(x, Range.contains) for x in range_sets])
+print(f"Answer part 1: {answer}")
 
-def overlap(first: tuple[int, int], second: tuple[int, int]):
-    fx, fy = first
-    sx, sy = second
-    return not (sy<fx or sx>fy)
-
-count = 0
-for line in lines:
-    line_ranges = []
-    for range in get_ranges(line):
-        for prev_range in line_ranges:
-            if contains(range, prev_range) or contains(prev_range, range):
-                count += 1
-        line_ranges.append(range)
-
-print(count)
-
-
-count = 0
-for line in lines:
-    line_ranges = []
-    for range in get_ranges(line):
-        for prev_range in line_ranges:
-            if overlap(range, prev_range) or overlap(prev_range, range):
-                count += 1
-        line_ranges.append(range)
-
-print(count)
+answer = sum([count_matches(x, Range.overlaps) for x in range_sets])
+print(f"Answer part 2: {answer}")
