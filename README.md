@@ -27,10 +27,21 @@ have some support for it. The main differences between the two parts are
 [Solution day 3](day03.py)
 
 ## Day 4
+[Day 4](https://adventofcode.com/2022/day/4)
+
+[Solution day 4](day04.py)
 
 ## Day 5
+[Day 5](https://adventofcode.com/2022/day/5)
+
+[Solution day 5](day05.py)
 
 ## Day 6
+[Day 6](https://adventofcode.com/2022/day/6) requires finding the first block
+of characters in a string with no duplicates. The difference between part 1
+and 2 is that the former uses block size of 4, and the other 14.
+
+[Solution day 6](day06.py)
 
 ## Day 7
 
