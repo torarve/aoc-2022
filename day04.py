@@ -1,6 +1,6 @@
 from itertools import accumulate
 from typing import Callable, Generator, Iterable
-from common import read_lines
+from common import parse_lines, read_lines
 
 class Range:
     @staticmethod
@@ -34,7 +34,7 @@ def count_matches(ranges: Iterable[Range], f: Callable[[Range, Range], bool]) ->
 
 
 lines = read_lines("input04.txt")
-range_sets = [list(Range.parse_line(line)) for line in lines]
+range_sets = list(parse_lines("input04.txt", lambda l: list(Range.parse_line(l))))
 
 answer = sum([count_matches(x, Range.contains) for x in range_sets])
 print(f"Answer part 1: {answer}")
