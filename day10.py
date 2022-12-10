@@ -23,10 +23,7 @@ class Computer:
         if arg is not None:
             self.x += arg
 
-        if self.cycle == 20:
-            self.signals.append(self.x*20)
-        elif (self.cycle-20) % 40 == 0:
-            self.signals.append(self.x*self.cycle)
+        self.signals.append(self.x*self.cycle)
 
     def run(self, lines):
         for line in lines:
@@ -39,5 +36,5 @@ class Computer:
 lines = read_lines("input10.txt")
 computer = Computer()
 computer.run(lines)    
-print(f"Answer part 1: {sum(computer.signals)}")
+print(f"Answer part 1: {sum(computer.signals[19::40])}")
 print(f"Answer part 2:\n {computer.screen}")
