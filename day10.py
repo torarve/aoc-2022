@@ -1,7 +1,8 @@
 from common import read_lines
 
+
 class Computer:
-    def __init__(self):  
+    def __init__(self):
         self.cycle = 0
         self.x = 1
         self.signals = []
@@ -9,13 +10,13 @@ class Computer:
 
     @property
     def screen(self):
-        rows = ["".join(self.pixels[y*40:(y+1)*40]) for y in range(0,6)]
+        rows = ["".join(self.pixels[y*40:(y+1)*40]) for y in range(0, 6)]
         return "\n".join(rows)
 
     def step(self, arg=None):
         """Perform a single step, updating the screen and remembering signals"""
         pos_x = self.cycle % 40
-        if abs(pos_x - self.x)<2:
+        if abs(pos_x - self.x) < 2:
             self.pixels[self.cycle] = "#"
 
         self.cycle += 1
@@ -35,6 +36,6 @@ class Computer:
 
 lines = read_lines("input10.txt")
 computer = Computer()
-computer.run(lines)    
+computer.run(lines)
 print(f"Answer part 1: {sum(computer.signals[19::40])}")
 print(f"Answer part 2:\n {computer.screen}")
