@@ -55,7 +55,7 @@ lines = read_lines("input12.txt")
 cols = len(lines[0])
 rows = len(lines)
 print(rows, cols)
-data = [0 if x=="S" else 26 if x == "E" else ord(x) - ord("a") for x in list("".join(lines))]
+data = [0 if x=="S" else 25 if x == "E" else ord(x) - ord("a") for x in list("".join(lines))]
 # print(data)
 m = Matrix(rows, cols, data)
 # print(m)
@@ -65,24 +65,32 @@ end = end_pos(list("".join(lines)), cols)
 
 print(start, end, m[end])
 
-count = 0
+def find_shortest_distance(start, end, m):
+    count = 0
+    seen = set()
+    positions = start
+    while end not in positions:
+        count += 1
+        seen = seen.union(positions)
+        tmp = set()
+        for position in positions:
+            tmp1 = next_steps(m, *position)
+            tmp = tmp.union([x for x in tmp1 if x not in seen])
+            # tmp = tmp.union(tmp1)
+
+        # positions = list(tmp.difference(seen))
+        positions = list(tmp)
+        if len(positions) == 0:
+            print("Could not find a solution")
+            # print(len(seen), m.rows*m.cols)
+            break
+    return count
+
 positions = [start]
-seen = set()
-while end not in positions:
-    count += 1
-    seen = seen.union(positions)
-    tmp = set()
-    for position in positions:
-        tmp1 = next_steps(m, *position)
-        # tmp = tmp.union([x for x in tmp1 if x not in seen])
-        tmp = tmp.union(tmp1)
+print(find_shortest_distance(positions, end, m))
 
-    positions = list(tmp.difference(seen))
-    if len(positions) == 0:
-        print("Could not find a solution")
-        print(len(seen), m.rows*m.cols)
-        break
-
-print(count)
+positions = [(x,y) for x in range(0,m.cols) for y in range(0,m.rows) if m[x,y] == 0]
+# print(positions)
+print(find_shortest_distance(positions, end, m))
 
 # print(ord('z') - ord("a"))
