@@ -33,7 +33,8 @@ def next_position(x, y, blocked):
     return None
 
 
-def run(lines, part1: bool = True):
+def run(lines, part1: bool = True, print: bool = False):
+    path = []
     blocked = init(lines)
     count = 0
     if part1:
@@ -43,17 +44,35 @@ def run(lines, part1: bool = True):
     x, y = (500, 0)
 
     while (part1 and y <= bottom) or (not part1 and (x, y) not in blocked):
+        path.append((x, y))
         next = next_position(x, y, blocked)
         if next is not None and (part1 or next[1] < bottom):
             x, y = next
         else:
             blocked.add((x, y))
+            path = []
             count += 1
             x, y = (500, 0)
+
+    if print:
+        rocks = init(lines)
+        xmin, xmax, ymin, ymax = min([x for x, y in blocked]), max(
+            [x for x, y in blocked]), 0, max([y for x, y in blocked])
+        w = (xmax-xmin)+1
+        output = [' ']*w*(ymax-ymin+1)
+        for x, y in blocked:
+            output[(x-xmin) + y*w] = '*'
+        for x, y in rocks:
+            output[(x-xmin) + y*w] = '#'
+        for x, y in path:
+            output[(x-xmin) + y*w] = '¤'
+
+        for y in range(ymin, ymax+1):
+            print("".join(output[y*w:(y+1)*w]))
 
     return count
 
 
 lines = read_lines("input14.txt")
-print(f"Answer part 1: {run(lines, True)}")
-print(f"Answer part 2: {run(lines, False)}")
+print(f"Answer part 1: {run(lines, True, False)}")
+print(f"Answer part 2: {run(lines, False, False)}")
