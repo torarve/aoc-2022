@@ -1,76 +1,59 @@
 from common import read_lines
 
 
-
-
-lines = """498,4 -> 498,6 -> 496,6
-503,4 -> 502,4 -> 502,9 -> 494,9""".split("\n")
-
-lines = read_lines("input14.txt")
-
-start = (500,0)
-
-
 def point_range(begin, end):
     x1, y1 = begin
     x2, y2 = end
-    if x1==x2:
-        for i in range(min(y1,y2), max(y1,y2)+1):
+    if x1 == x2:
+        for i in range(min(y1, y2), max(y1, y2)+1):
             yield (x1, i)
     else:
-        for i in range(min(x1, x2), max(x1,x2)+1):
+        for i in range(min(x1, x2), max(x1, x2)+1):
             yield (i, y1)
+
 
 def init(lines):
     blocked = set()
     for line in lines:
-        print(line)
         points = [eval(x) for x in line.split(" -> ")]
-        for i in range(1,len(points)):
+        for i in range(1, len(points)):
             for x in point_range(points[i-1], points[i]):
                 blocked.add(x)
-    
+
     return blocked
 
 
-blocked = init(lines)
-count = 0
-bottom = max([y for x, y in blocked])
-x, y = (500, 0)
-while y <= bottom:
+def next_position(x, y, blocked):
     if (x, y+1) not in blocked:
-        y += 1
+        return x, y + 1
     elif (x-1, y+1) not in blocked:
-        x, y = (x-1, y+1)
+        return x-1, y+1
     elif (x+1, y+1) not in blocked:
-        x, y = (x+1, y+1)
+        return (x+1, y+1)
+    return None
+
+
+def run(lines, part1: bool = True):
+    blocked = init(lines)
+    count = 0
+    if part1:
+        bottom = max([y for x, y in blocked])
     else:
-        blocked.add((x,y))
-        count +=1 
-        x, y = (500, 0)
+        bottom = max([y for x, y in blocked]) + 2
+    x, y = (500, 0)
 
-print(count)
+    while (part1 and y <= bottom) or (not part1 and (x, y) not in blocked):
+        next = next_position(x, y, blocked)
+        if next is not None and (part1 or next[1] < bottom):
+            x, y = next
+        else:
+            blocked.add((x, y))
+            count += 1
+            x, y = (500, 0)
 
-blocked = init(lines)
-bottom +=2
-count = 0
-x, y = (500, 0)
-while True:
-    if y+1 == bottom:
-        blocked.add((x,y))
-        count += 1
-        x, y = (500, 0)
-    if (x, y+1) not in blocked:
-        y += 1
-    elif (x-1, y+1) not in blocked:
-        x, y = (x-1, y+1)
-    elif (x+1, y+1) not in blocked:
-        x, y = (x+1, y+1)
-    elif y == 0:
-        break
-    else:
-        blocked.add((x,y))
-        count +=1 
-        x, y = (500, 0)
+    return count
 
-print(count+1)
+
+lines = read_lines("input14.txt")
+print(f"Answer part 1: {run(lines, True)}")
+print(f"Answer part 2: {run(lines, False)}")
