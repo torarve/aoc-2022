@@ -25,7 +25,7 @@ def adjacent_to(point: tuple[int,int,int]):
     x,y,z = point
     return set([(x-1, y, z), (x+1, y, z), (x, y-1, z), (x, y+1, z), (x, y, z-1), (x, y, z+1)])
 
-cubes: list[tuple[int,int,int]] = [parse_line(line) for line in lines]
+cubes: set[tuple[int,int,int]] = set([parse_line(line) for line in lines])
 
 sides = [x for point in cubes for x in adjacent_to(point) if x not in cubes]
 print(len(sides))
@@ -50,10 +50,11 @@ def inside_bounds(p: tuple[int,int,int]):
     return x1<=x and x<=x2 and y1<=y and y<=y2 and z1<=z and z<=z2
 
 while True:
-    new_points = [x for p in outside for x in adjacent_to(p) if inside_bounds(x) and x not in cubes and x not in outside]
-    if len(new_points) == 0:
-        break
+    new_points = set([x for p in outside for x in adjacent_to(p) if inside_bounds(x) and x not in cubes])
+    old_len = len(outside)
     outside = outside.union(set(new_points))
+    if old_len == len(outside):
+        break
 
 sides = [x for point in cubes for x in adjacent_to(point) if x not in cubes and x in outside]
 print(len(sides))
