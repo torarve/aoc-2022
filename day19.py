@@ -12,7 +12,7 @@ class Blueprint:
 lines = """Blueprint 1: Each ore robot costs 4 ore. Each clay robot costs 2 ore. Each obsidian robot costs 3 ore and 14 clay. Each geode robot costs 2 ore and 7 obsidian.
 Blueprint 2: Each ore robot costs 2 ore. Each clay robot costs 3 ore. Each obsidian robot costs 3 ore and 8 clay. Each geode robot costs 3 ore and 12 obsidian.""".split("\n")
 
-limit = 24
+lines = read_lines("input19.txt")
 blueprints: list[Blueprint] = []
 
 
@@ -30,61 +30,68 @@ for line in lines:
 
     blueprints.append(blueprint)
 
-robots = { "ore": 1, "clay": 0, "obsidian": 0, "geode": 0}
-wallet = { "ore": 0, "clay": 0, "obsidian": 0, "geode": 0}
+max_required_of = {}
+for k, v in [x for _, y in blueprint.lines.items() for x in y.items()]:
+    max_required_of[k] = max(max_required_of.get(k,-1), v)
 
-def step(remaining: int, blueprint: Blueprint, robots: dict[str,int], wallet: dict[str,int], seen):
-    can_build = []
-    state = f"{robots}|{wallet}|{remaining}"
+
+def step(remaining: int, blueprint: Blueprint, robots: dict[str,int], wallet: dict[str,int], seen, best_answer = 0):
+    upper_limit = wallet["geode"] + robots["geode"]*remaining + ((remaining+1)*remaining)//2
+    if upper_limit <= best_answer:
+        return -1
+
+    state = hash(f"{robots}|{wallet}|{remaining}")
     if state in seen:
         return seen[state]
 
-    geode_line = blueprint.lines["geode"]
-    for key, value in wallet.items():
-        if key in geode_line and geode_line[key]>value+remaining:
-            # Not possible to open any geodes in the remaining time 
-            return 0
+    if remaining == 0:
+        return wallet["geode"]
 
-    if remaining == 0: return wallet["geode"]
+    can_build = []
     for type, cost in blueprint.lines.items():
         if all([wallet[cost_item]>=cost_value for cost_item, cost_value in cost.items()]):
             # Choose: build or not?
             can_build.append(type)
 
+    # Update current wallet based on available robots
     for type, count in robots.items():
         wallet[type] += count
 
     best_value = wallet["geode"]
+    # Create new robot if possible
     for to_build in can_build:
+        if to_build != "geode":
+            if max_required_of[to_build]*remaining <= wallet[to_build]:
+                continue
+
+            # No need to build more of a robot if we never will be able to use it
+            if max_required_of[to_build] <= robots[to_build]:
+                continue
+
         new_wallet = dict(x for x in wallet.items())
         new_robots = dict(x for x in robots.items())
         for type, value in blueprint.lines[to_build].items():
             new_wallet[type] -= value
         new_robots[to_build] += 1
-        if to_build == "geode":
-            print(f"Building {to_build} with {remaining} remaining minutes. {wallet}, {robots}")
-        best_value = max(best_value, step(remaining-1, blueprint, new_robots, new_wallet, seen))
+        best_value = max(best_value, step(remaining-1, blueprint, new_robots, new_wallet, seen, max(best_value, best_answer)))
 
-    best_value = max(best_value, step(remaining-1, blueprint, robots, wallet, seen))
+    best_value = max(best_value, step(remaining-1, blueprint, robots, wallet, seen, max(best_value, best_answer)))        
     seen[state] = best_value
-
     return best_value
 
 
+values = []
 for blueprint in blueprints:
-    wallet = step(24, blueprint, { "ore": 1, "clay": 0, "obsidian": 0, "geode": 0}, { "ore": 0, "clay": 0, "obsidian": 0, "geode": 0}, {})
-    print(wallet)
-    # for i in range(0, limit):
-    #     can_build = []
-    #     for type, cost in blueprint.lines.items():
-    #         if all([wallet[cost_item]>=cost_value for cost_item, cost_value in cost.items()]):
-    #             # Choose: build or not?
-    #             can_build.append(type)
+    opened_geodes = step(24, blueprint, { "ore": 1, "clay": 0, "obsidian": 0, "geode": 0}, { "ore": 0, "clay": 0, "obsidian": 0, "geode": 0}, {})
+    print(opened_geodes)
+    values.append(opened_geodes*blueprint.id)
 
-    #     print(i, can_build)
+print(sum(values))
 
-    #     for type, count in robots.items():
-    #         wallet[type] += count
+values = []
+for blueprint in blueprints[:3]:
+    opened_geodes = step(32, blueprint, { "ore": 1, "clay": 0, "obsidian": 0, "geode": 0}, { "ore": 0, "clay": 0, "obsidian": 0, "geode": 0}, {})
+    print(opened_geodes)
+    values.append(opened_geodes)
 
-    #     print(wallet)
-
+print(values[0]*values[1]*values[2])
