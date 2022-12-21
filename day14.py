@@ -33,7 +33,7 @@ def next_position(x, y, blocked):
     return None
 
 
-def run(lines, part1: bool = True, print: bool = False):
+def run(lines, part1: bool = True, should_print: bool = False):
     path = []
     blocked = init(lines)
     count = 0
@@ -54,7 +54,7 @@ def run(lines, part1: bool = True, print: bool = False):
             count += 1
             x, y = (500, 0)
 
-    if print:
+    if should_print:
         rocks = init(lines)
         xmin, xmax, ymin, ymax = min([x for x, y in blocked]), max(
             [x for x, y in blocked]), 0, max([y for x, y in blocked])
@@ -74,5 +74,5 @@ def run(lines, part1: bool = True, print: bool = False):
 
 
 lines = read_lines("input14.txt")
-print(f"Answer part 1: {run(lines, True, False)}")
-print(f"Answer part 2: {run(lines, False, False)}")
+print(f"Answer part 1: {run(lines, True, should_print=True)}")
+print(f"Answer part 2: {run(lines, False, should_print=False)}")
