@@ -114,7 +114,14 @@ and 2 is that the former uses block size of 4, and the other 14.
 [Solution day 20](day20.py)
 
 ## Day 21
-[Day 21](https://adventofcode.com/2022/day/21)
+Part 1 of [Day 21](https://adventofcode.com/2022/day/21) is easy parsing of simple
+expressions, and then recursively evaluating them. Part 2 changes it to an equation
+(but using the same expression tree). Initially solved by constructing a simple expression
+tree in the same way as part one, and then solving the equation using SymPy
+
+Rewrote it to store each expression as a tuple of left-hand side, operator and right-hand side.
+First step was to evaluate both sides of the equation (by bulding the expression), then
+carefully solving `a 'op' b = value` for each level in the tree.
 
 [Solution day 21](day21.py)
 
