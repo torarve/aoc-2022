@@ -27,7 +27,9 @@ have some support for it. The main differences between the two parts are
 [Solution day 3](day03.py)
 
 ## Day 4
-[Day 4](https://adventofcode.com/2022/day/4)
+[Day 4](https://adventofcode.com/2022/day/4) was mainly concerned about ranges,
+and comparing them. For part 1 the condition was if one range contained another (completely).
+Part 2 changed this to any overlap.
 
 [Solution day 4](day04.py)
 

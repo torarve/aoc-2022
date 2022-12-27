@@ -35,48 +35,30 @@ def parse_inputs(lines: list[str]):
         stacks.append([])
 
     idx = 0
-    # Part 1
     while lines[idx].strip()[0] == "[":
         for i in range(0, stack_count):
-            try:
-                elem = lines[idx][1+i*4]
-                if elem != " ":
-                    stacks[i].append(elem)
-            except:
-                pass
-
+            elem = lines[idx][1+i*4]
+            if elem != " ":
+                stacks[i].append(elem)
         idx += 1
 
     for i in range(0,stack_count):
         stacks[i].reverse()
 
-    # Part 2
     cmds = [parse_command(line) for line in lines[idx+2:]]
-
     return (stacks, cmds)
 
 
-sample_input = """    [D]    
-[N] [C]    
-[Z] [M] [P]
- 1   2   3 
-
-move 1 from 2 to 1
-move 3 from 1 to 3
-move 2 from 2 to 1
-move 1 from 1 to 2""".split("\n")
-
-input = sample_input
-input = read_lines("input05.txt")
+input = read_lines("input05.txt", False)
 
 stacks, cmds = parse_inputs(input)
 for cmd in cmds:
     cmd.apply(stacks)
 
-print("".join([stack[-1] for stack in stacks]))
+print(f"Solution part 1: {''.join([stack[-1] for stack in stacks])}")
 
 stacks, cmds = parse_inputs(input)
 for cmd in cmds:
     cmd.apply_9001(stacks)
 
-print("".join([stack[-1] for stack in stacks]))
+print(f"Solution part 2: {''.join([stack[-1] for stack in stacks])}")
